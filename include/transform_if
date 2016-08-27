@@ -1,0 +1,107 @@
+// This file is a part of std-adiog project.
+// Copyright (c) 2016 Aleksander Gajewski <adiog@brainfuck.pl>.
+
+#ifndef _TRANSFORM_IF
+#define _TRANSFORM_IF
+
+#include <algorithm>
+
+
+namespace adg {
+
+template <typename InputContainer,
+          typename Transform,
+          typename Predicate,
+          typename OutputContainer>
+void transform_if(InputContainer& inputContainer,
+                  Transform& transform,
+                  Predicate& predicate,
+                  OutputContainer& outputContainer)
+{
+    auto outputIterator =
+        ::std::inserter(outputContainer, outputContainer.end());
+
+    ::std::for_each(inputContainer.begin(),
+                    inputContainer.end(),
+                    [&](typename InputContainer::value_type element) {
+                        if (predicate(element))
+                        {
+                            outputIterator = transform(element);
+                        }
+                    });
+};
+
+template <typename OutputContainer,
+          typename Transform,
+          typename Predicate,
+          typename InputContainer>
+OutputContainer transform_if(InputContainer& inputContainer,
+                             Transform& transform,
+                             Predicate& predicate)
+{
+    OutputContainer outputContainer;
+
+    auto outputIterator =
+        ::std::inserter(outputContainer, outputContainer.end());
+
+    ::std::for_each(inputContainer.begin(),
+                    inputContainer.end(),
+                    [&](typename InputContainer::value_type element) {
+                        if (predicate(element))
+                        {
+                            outputIterator = transform(element);
+                        }
+                    });
+
+    return outputContainer;
+}
+
+template <typename InputContainer, typename Transform, typename Predicate>
+class TransformIf
+{
+public:
+    TransformIf(InputContainer& iInputContainer,
+                Transform& iTransform,
+                Predicate& iPredicate)
+            : inputContainer(iInputContainer)
+            , predicate(iPredicate)
+            , transform(iTransform)
+    {
+    }
+
+    template <typename OutputContainer>
+    operator OutputContainer()
+    {
+        OutputContainer outputContainer;
+
+        auto outputIterator =
+            ::std::inserter(outputContainer, outputContainer.end());
+
+        ::std::for_each(inputContainer.begin(),
+                        inputContainer.end(),
+                        [&](typename InputContainer::value_type element) {
+                            if (predicate(element))
+                            {
+                                outputIterator = transform(element);
+                            }
+                        });
+
+        return outputContainer;
+    }
+
+private:
+    InputContainer& inputContainer;
+    Transform& transform;
+    Predicate& predicate;
+};
+
+template <typename InputContainer, typename Transform, typename Predicate>
+TransformIf<InputContainer, Predicate, Transform> transform_if(
+    InputContainer& inputContainer, Predicate& predicate, Transform& transform)
+{
+    return TransformIf<InputContainer, Predicate, Transform>(
+        inputContainer, predicate, transform);
+}
+}
+
+#endif

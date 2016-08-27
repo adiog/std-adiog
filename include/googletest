@@ -1,0 +1,12 @@
+// This file is a part of std-adiog project.
+// Copyright (c) 2016 Aleksander Gajewski <adiog@brainfuck.pl>.
+
+#include <gtest/gtest.h>
+
+#ifndef GTEST_MAIN
+#define GTEST_MAIN()                          \
+    int main(int argc, char *argv[]) {        \
+        testing::InitGoogleTest(&argc, argv); \
+        return RUN_ALL_TESTS();               \
+    }
+#endif
