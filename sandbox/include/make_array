@@ -1,0 +1,68 @@
+// This file is a part of cpp-training project.
+// Copyright (c) 2016 Aleksander Gajewski <adiog@brainfuck.pl>.
+
+#ifndef __MAKE_ARRAY__
+#define __MAKE_ARRAY__
+
+#include <array>
+
+template <typename T, int M, int N, T V, T... S>
+struct make_array : make_array<T, M, N - 1, V, V, S...> {};
+
+template <typename T, int M, T V, T... S>
+struct make_array<T, M, 0, V, S...> {
+    constexpr static std::array<T, M> get() { return std::array<T, M>{S...}; }
+};
+
+#endif  // __MAKE_ARRAY__
+
+///////////////////////////////////////////////////////////////////////////////
+// i have written a tricky template-meta-something, which allows to create
+// a constexpr std::array filled with custom values (integer or enum type -
+// - yeah, to be honest enums work only under gcc, clang does not like them)
+//
+// motivation:
+//  - filling the gap in std::array interface (vector has a constructor (length,
+//  valueToFill))
+//  - enabling static checks in constexpr constructor
+//
+// application:
+//    - fun
+//    - simply use std::array instead of std::vector
+//
+// limitations:
+//    - works fine only with integer types (both with gcc and clang).
+//    - will be replaced by constexpr soon.
+//
+// doubts - why following constexpr function does not work?:
+//
+//    template <typename T, int N> constexpr std::array<T, N> fill_array(T
+//    value) {
+//       std::array<T, N> a = {0};
+//
+//       for (int i = 0; i < N; i++) {
+//          a[i] = value;
+//       }
+//
+//       return a;
+//    }
+
+///////////////////////////////////////////////////////////////////////////////
+// usage:
+// auto array = make_array<Type, Length, NumberOfElementsToInit, Value>::get();
+// or more explicit:
+// std::array<T,N> = make_array<T,N,N,InitValue>::get();
+
+///////////////////////////////////////////////////////////////////////////////
+// example:
+//    constexpr auto huarray = make_array<int, 5, 3, 13>::get();
+//    for (auto a : huarray) {
+//        std::cout << a << " ";
+//    }
+//    static_assert(huarray[0] == 13);
+//    static_assert(huarray[1] == 13);
+//    static_assert(huarray[2] == 13);
+//    static_assert(huarray[3] == 0);
+//    static_assert(huarray[4] == 0);
+//
+// output: 13 13 13 0 0

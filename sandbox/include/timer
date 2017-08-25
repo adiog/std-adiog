@@ -1,0 +1,39 @@
+// This file is a part of cpp-training project.
+// Copyright (c) 2016 Aleksander Gajewski <adiog@brainfuck.pl>.
+
+#ifndef __TIMER__
+#define __TIMER__
+
+#include <chrono>
+#include <deque>
+#include <thread>
+
+class timer {
+  public:
+    timer() = default;
+    static timer& get() {
+        static timer t;
+        return t;
+    }
+    void start() { time_points.push_back(std::chrono::steady_clock::now()); }
+    int stop() {
+        std::chrono::steady_clock::time_point last = time_points.back();
+        time_points.pop_back();
+        std::chrono::steady_clock::time_point end =
+            std::chrono::steady_clock::now();
+        return std::chrono::duration_cast<std::chrono::microseconds>(end - last)
+            .count();
+    }
+
+  private:
+    std::deque<std::chrono::steady_clock::time_point> time_points;
+};
+
+#define TIC timer::get().start()
+#define TOC timer::get().stop()
+#define TAC std::cout << "Timer: " << timer::get().stop() << "ns." << std::endl
+
+#define SLEEP(X) std::this_thread::sleep_for(std::chrono::seconds(X))
+#define SLEEPMS(X) std::this_thread::sleep_for(std::chrono::milliseconds(X))
+
+#endif  // __TIMER__

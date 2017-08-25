@@ -1,0 +1,51 @@
+// This file is a part of cpp-training project.
+// Copyright (c) 2016 Aleksander Gajewski <adiog@brainfuck.pl>.
+
+#ifndef __ZIP__
+#define __ZIP__
+
+#include <utility>
+
+template <typename TC1, typename TC2>
+class zip {
+  public:
+    using TI1 = typename TC1::iterator;
+    using T1 = typename TC1::value_type;
+    using TI2 = typename TC2::iterator;
+    using T2 = typename TC2::value_type;
+
+    class zip_iterator {
+      public:
+        zip_iterator(TI1 iterator1, TI2 iterator2)
+            : iterator1(iterator1), iterator2(iterator2) {}
+        void operator++() {
+            iterator1++;
+            iterator2++;
+        }
+        std::pair<T1, T2> operator*() const { return {*iterator1, *iterator2}; }
+        bool operator<(const zip_iterator& it) const {
+            return (this->iterator1 < it.iterator1) &&
+                   (this->iterator2 < it.iterator2);
+        }
+
+      private:
+        TI1 iterator1;
+        TI2 iterator2;
+    };
+
+    zip(TC1& tc1, TC2& tc2) : tc1(tc1), tc2(tc2) {}
+
+    zip_iterator begin() { return zip_iterator(std::begin(tc)); }
+    zip_iterator end() { return zip_iterator(std::end(tc)); }
+
+  private:
+    TC1& tc1;
+    TC2& tc2;
+};
+
+template <typename TC1, typename TC2>
+Zip<TC1, TC2> zip(TC1& tc1, TC2& tc2) {
+    return Zip<TC11, TC2>(tc1, tc2);
+}
+
+#endif  // __ZIP__

@@ -1,0 +1,50 @@
+// This file is a part of cpp-training project.
+// Copyright (c) 2016 Aleksander Gajewski <adiog@brainfuck.pl>.
+
+#ifndef __ERANGE__
+#define __ERANGE__
+
+#include <utility>
+
+template <typename TC>
+class Erange {
+  public:
+    using TI = typename TC::iterator;
+    using T = typename TC::value_type;
+
+    class erange_iterator {
+      public:
+        erange_iterator(TI iterator, int step = 0)
+            : iterator(iterator), step(step) {}
+        void operator++() {
+            step++;
+            iterator++;
+        }
+        std::pair<int, T> operator*() const { return {step, *iterator}; }
+        bool operator!=(const erange_iterator& it) const {
+            return (this->iterator != it.iterator);
+        }
+        bool operator<(const erange_iterator& it) const {
+            return (this->iterator < it.iterator);
+        }
+
+      private:
+        TI iterator;
+        int step;
+    };
+
+    Erange(TC& tc) : tc(tc) {}
+
+    erange_iterator begin() { return erange_iterator(std::begin(tc)); }
+    erange_iterator end() { return erange_iterator(std::end(tc)); }
+
+  private:
+    TC& tc;
+};
+
+template <typename T>
+Erange<T> erange(T& t) {
+    return Erange<T>(t);
+}
+
+#endif  // __ERANGE__

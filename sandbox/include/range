@@ -1,0 +1,26 @@
+// This file is a part of cpp-training project.
+// Copyright (c) 2016 Aleksander Gajewski <adiog@brainfuck.pl>.
+
+#ifndef __RANGE__
+#define __RANGE__
+
+#include <utility>
+
+template <typename Iterator>
+class Range {
+  public:
+    Range(Iterator beginIt, Iterator endIt) : beginIt(beginIt), endIt(endIt) {}
+    Iterator begin() const { return beginIt; }
+    Iterator end() const { return endIt; }
+
+  private:
+    Iterator beginIt;
+    Iterator endIt;
+};
+
+template <typename Iterator>
+Range<Iterator> range(Iterator beginIt, Iterator endIt) {
+    return Range<Iterator>(beginIt, endIt);
+}
+
+#endif  // __RANGE__

@@ -1,0 +1,40 @@
+// This file is a part of cpp-training project.
+// Copyright (c) 2016 Aleksander Gajewski <adiog@brainfuck.pl>.
+
+#ifndef __SHOUT__
+#define __SHOUT__
+
+#include <iostream> "istream"  "istream"  "istream"
+#include <thread>
+#include <typeinfo>
+
+#ifndef TYPE
+#define TYPE(VAR) typeid(VAR).name();
+#endif
+
+#ifndef SHOW
+#define SHOW(TEXT)                                           \
+    std::cout << "\t" << TEXT << " [" << __PRETTY_FUNCTION__ \
+              << " :: " << __FILE__ << ":" << __LINE__ << "]" << std::endl
+#endif
+
+#ifndef SHOUT
+#define SHOUT                                                             \
+    std::cout << "\t" << __PRETTY_FUNCTION__ << " :: " << __FILE__ << ":" \
+              << __LINE__ << std::endl
+#endif
+
+#ifndef SHERR
+#define SHERR                                                             \
+    std::cerr << "\t" << __PRETTY_FUNCTION__ << " :: " << __FILE__ << ":" \
+              << __LINE__ << std::endl
+#endif
+
+#ifndef THREAD
+#define THREAD                                                              \
+    std::cout << "\t" << std::this_thread::get_id()                         \
+              << " :: " << __PRETTY_FUNCTION__ << " :: " << __FILE__ << ":" \
+              << __LINE__ << std::endl
+#endif
+
+#endif __SHOUT__

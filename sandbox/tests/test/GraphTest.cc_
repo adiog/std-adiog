@@ -1,0 +1,66 @@
+#include <gtest/gtest.h>
+#include <dataStructure/BinarySearchTree.h>
+
+using VertexLabelType = std::string;
+using VertexEdge = std::pair<VertexLabelType, Edge>;
+
+class LabelIterator
+{
+
+};
+
+
+class EdgeIterator
+{
+
+};
+
+
+class Edge
+{
+    using LengthType = uint32_t;
+
+    LengthType length;
+};
+
+
+class EdgeCollectionIterator
+{
+    EdgeCollection operator*()
+    {
+        return
+    }
+};
+
+class EdgeCollection
+{
+    using EdgeCollectionType =
+};
+
+template<>
+class Graph
+{
+
+    EdgeCollectionIterator begin() {
+        return EdgeCollectionIterator{edgeCollection.begin()};
+    }
+};
+
+TEST(FutureTestSuite, AsyncWaitGet)
+{
+    dataStructure::BinarySearchTree<int,int> bst{};
+
+    ASSERT_FALSE(bst.hasKey(13));
+
+    bst.insert(13,42);
+
+    ASSERT_TRUE(bst.hasKey(13));
+
+    bst.insert(13,42);
+    bst.insert(15,42);
+    bst.insert(16,42);
+    bst.insert(14,42);
+    std::cout << bst << std::endl;
+    ASSERT_EQ(42, 42);
+}
+

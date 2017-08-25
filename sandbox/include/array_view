@@ -1,0 +1,40 @@
+// This file is a part of cpp-training project.
+// Copyright (c) 2016 Aleksander Gajewski <adiog@brainfuck.pl>.
+
+#ifndef __ARRAY_VIEW__
+#define __ARRAY_VIEW__
+
+#include <vector>
+
+// dummy wrapper 
+
+class array_view {
+  public:
+    array_view(const uint8_t *dataPtr, unsigned int dataLength) : dataPtr(dataPtr), dataLength(dataLength) {
+        if (dataPtr == nullptr) {
+            throw("Ups");
+        }
+    }
+    array_view(const std::vector<uint8_t> &vec) : dataPtr(vec.data()), dataLength(vec.size()) {}
+    array_view(const std::vector<uint8_t> &vec, unsigned int length) : dataPtr(vec.data()), dataLength(length) {
+        if (length > vec.size()) {
+            throw("Ups");
+        }
+    }
+    array_view(const std::vector<uint8_t> &vec, unsigned int begin, unsigned int end)
+        : dataPtr(vec.data() + begin), dataLength(end - begin) {
+        if ((begin > vec.size()) || (end > vec.size()) || (begin > end)) {
+            throw("Ups");
+        }
+    }
+
+    const uint8_t *begin(void) { return dataPtr; }
+    const uint8_t *end(void) { return dataPtr + dataLength; }
+
+  private:
+    const uint8_t *dataPtr;
+    unsigned int dataLength;
+};
+
+#endif // __ARRAY_VIEW__
+
