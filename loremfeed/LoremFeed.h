@@ -30,7 +30,7 @@ private:
 template <typename FeedType, typename FeedValueType> class FeedInterface {
 public:
   virtual FeedValueType get() = 0;
-  virtual FeedType &limit(size_t sizeLimit) {
+  virtual FeedType &Limit(size_t sizeLimit) {
     size = sizeLimit;
     return static_cast<FeedType &>(*this);
   }
@@ -47,6 +47,19 @@ public:
   }
   bool done() { return (size != 0) && (current == size); }
 
+  std::vector<FeedValueType> AsVector()
+  {
+      std::vector<FeedValueType> resultVector;
+      if (size == 0) {
+        throw std::runtime_error("trying to create vector from infinite stream");
+      }
+      resultVector.reserve(size);
+      for(auto element : *this)
+      {
+        resultVector.push_back(std::move(element));
+      }
+      return std::move(resultVector);
+  }
 private:
   size_t current = 0;
   size_t size = 10;
