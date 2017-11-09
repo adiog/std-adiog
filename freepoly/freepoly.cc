@@ -5,27 +5,46 @@
 #include <iostream>
 #include <vector>
 
-using container_t = std::vector<object_t<void, unsigned>>;
 
-template <> void free_method_t(const container_t &x, unsigned y) {
-  for (const auto &item : x) {
-    item.method_t(y);
-  }
+METHOD_CONTAINER(MethodContainer);
+
+using CallableAny = object_t<MethodContainer, void, unsigned, unsigned>;
+
+using container_t = std::vector<CallableAny>;
+
+
+template<>
+void MethodContainer::method(const int &x, unsigned indent, unsigned y) {
+    std::cout << std::string(indent, ' ');
+    std::cout << x * y << "\n";
 }
 
-template <> void free_method_t(const int &x, unsigned y) {
-  std::cout << x * y << "\n";
+template<>
+void MethodContainer::method(const double &x, unsigned indent, unsigned y) {
+    std::cout << std::string(indent, ' ');
+    std::cout << x * y << "\n";
 }
 
-template <> void free_method_t(const double &x, unsigned y) {
-  std::cout << x * y << "\n";
+template<>
+void MethodContainer::method(const std::string &x, unsigned indent, unsigned y) {
+    std::cout << std::string(indent, ' ');
+    while (y-- > 0) {
+        std::cout << x;
+    }
+    std::cout << "\n";
 }
 
-template <> void free_method_t(const std::string &x, unsigned y) {
-  while (y --> 0) {
-    std::cout << x;
-  }
-  std::cout << "\n";
+template<>
+void MethodContainer::method(const container_t& x, unsigned indent, unsigned y)
+{
+    std::cout << std::string(indent, ' ');
+    std::cout << "BEGIN\n";
+    for (auto &item : x)
+    {
+        item.method_t(indent+2, y);
+    }
+    std::cout << std::string(indent, ' ');
+    std::cout << "END\n";
 }
 
 int main() {
@@ -37,7 +56,7 @@ int main() {
   vec.push_back(vec);
   vec.push_back(3.14);
 
-  free_method_t<container_t, void, unsigned>(vec, 2U);
+  (void) MethodContainer::method<void>(vec, 0U, 3U);
 
   return 0;
 }
