@@ -1,0 +1,123 @@
+#pragma once
+
+#include <utility>
+
+#define STD(Type) ::std::Type
+
+#define EXTEND_STD_CLASS(Extension, Base)                \
+    struct Extension : public STD(Base)                  \
+    {                                                    \
+        using STD(Base)::Base;                           \
+        explicit Extension(const STD(Base) & base)       \
+                : STD(Base)(base)                        \
+        {                                                \
+        }                                                \
+        explicit Extension(STD(Base) && base)            \
+                : STD(Base)(base)                        \
+        {                                                \
+        }                                                \
+        Extension& operator=(STD(Base) && base)          \
+        {                                                \
+            Extension ext{base};                         \
+            std::swap(ext, *this);                       \
+            return *this;                                \
+        }                                                \
+        Extension& operator=(const STD(Base) & base)     \
+        {                                                \
+            Extension ext{base};                         \
+            std::swap(ext, *this);                       \
+            return *this;                                \
+        }                                                \
+        operator const STD(Base) & () const              \
+        {                                                \
+            return static_cast<const STD(Base)&>(*this); \
+        }                                                \
+        operator STD(Base) & ()                          \
+        {                                                \
+            return static_cast<STD(Base)&>(*this);       \
+        }                                                \
+    }
+
+#define CONTAIN_STD_CLASS(Extension, Base)               \
+    struct Extension                                     \
+    {                                                    \
+        STD(Base) impl;                                  \
+                                                         \
+        template <typename... Ts>                        \
+        Extension(Ts&&... ts)                            \
+                : impl(std::forward<Ts>(ts)...)          \
+        {                                                \
+        }                                                \
+                                                         \
+        Extension(const Extension& extension)            \
+                : impl(extension.impl)                   \
+        {                                                \
+        }                                                \
+        Extension(Extension&& extension)                 \
+                : impl(extension.impl)                   \
+        {                                                \
+        }                                                \
+        Extension& operator=(const Extension& extension) \
+        {                                                \
+            this->impl = extension.impl;                 \
+            return *this;                                \
+        }                                                \
+        Extension& operator=(Extension&& extension)      \
+        {                                                \
+            this->impl = extension.impl;                 \
+            return *this;                                \
+        }                                                \
+        operator const STD(Base) & () const              \
+        {                                                \
+            return impl;                                 \
+        }                                                \
+        operator STD(Base) & ()                          \
+        {                                                \
+            return impl;                                 \
+        }                                                \
+    }
+
+#define USING_STRONG(Extension, Base)                    \
+    struct Extension                                     \
+    {                                                    \
+        Base impl;                                       \
+                                                         \
+        template <typename... Ts>                        \
+        Extension(Ts&&... ts)                            \
+                : impl(std::forward<Ts>(ts)...)          \
+        {                                                \
+        }                                                \
+                                                         \
+        Extension(const Extension& extension)            \
+                : impl(extension.impl)                   \
+        {                                                \
+        }                                                \
+        Extension(Extension&& extension)                 \
+                : impl(extension.impl)                   \
+        {                                                \
+        }                                                \
+        Extension& operator=(const Extension& extension) \
+        {                                                \
+            this->impl = extension.impl;                 \
+            return *this;                                \
+        }                                                \
+        Extension& operator=(Extension&& extension)      \
+        {                                                \
+            this->impl = extension.impl;                 \
+            return *this;                                \
+        }                                                \
+        operator const Base&() const                     \
+        {                                                \
+            return impl;                                 \
+        }                                                \
+        operator Base&()                                 \
+        {                                                \
+            return impl;                                 \
+        }                                                \
+    }
+
+// TODO: write benchmarks / check asm
+// TODO: revert BOOST_NOEXCEPT_IF logic
+// TODO: consider default operators
+//        bool operator==(const Extension& rhs) const { return base == rhs.base; }
+//        bool operator<(const Extension& rhs) const { return base < rhs.base; }

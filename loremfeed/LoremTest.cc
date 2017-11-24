@@ -74,24 +74,24 @@ int main()
 
     const char* stringPtr = "This is truncated Hello World! string.";
     auto lenGen = LoremFeed::UniformInteger(20,30);
-    std::cout << "for(const auto& r : LoremFeed::Emplace<std::string>([&stringPtr](){return stringPtr;},:\n";
-    std::cout << "                                                    [&lenGen](){return lenGen.get();}).Limit(10)):\n";
-    for(const auto& r : LoremFeed::Emplace<std::string>([&stringPtr](){return stringPtr;},
-                                                        [&lenGen](){return lenGen.get();}).Limit(10))
+    std::cout << "for(auto r : LoremFeed::Emplace<std::string>([&stringPtr](){return stringPtr;},:\n";
+    std::cout << "                                             [&lenGen](){return lenGen.get();}).Limit(10)):\n";
+    for(auto r : LoremFeed::Emplace<std::string>([&stringPtr](){return stringPtr;},
+                                                 [&lenGen](){return lenGen.get();}).Limit(10))
     {
         std::cout << r << "\n";
     }
     std::cout << "\n\n";
 
-    std::cout << "for(const auto& r : LoremFeed::StringFeed(8).Limit(10)):\n";
-    for(const auto& r : LoremFeed::StringFeed(8).Limit(10))
+    std::cout << "for(auto r : LoremFeed::StringFeed(8).Limit(10)):\n";
+    for(auto r : LoremFeed::StringFeed(8).Limit(10))
     {
         std::cout << r << " - ";
     }
     std::cout << "\n\n";
 
-    std::cout << "for(const auto& r : LoremFeed::RandomLengthString(4,12).Limit(10)):\n";
-        for(const auto& r : LoremFeed::RandomLengthString(4,12).Limit(10))
+    std::cout << "for(auto r : LoremFeed::RandomLengthString(4,12).Limit(10)):\n";
+        for(auto r : LoremFeed::RandomLengthString(4,12).Limit(10))
     {
         std::cout << r << " - ";
     }

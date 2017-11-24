@@ -1,0 +1,6 @@
+#pragma once
+
+#include <utility>
+
+#define FORWARD(...) ::std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)
+

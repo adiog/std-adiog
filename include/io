@@ -1,0 +1,11 @@
+// This file is a part of std-adiog project.
+// Copyright (c) 2016 Aleksander Gajewski <adiog@brainfuck.pl>.
+
+#ifndef _IO
+#define _IO
+
+#include <_adg_prettyprint.h>
+
+#include <_adg_iostream.h>
+
+#endif
