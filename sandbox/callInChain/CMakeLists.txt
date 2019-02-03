@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.0)
+project(cxx_call_in_chain)
+
+set(CMAKE_CXX_STANDARD 17)
+
+add_executable(callInChainForwardOperator callInChainForwardOperator.cpp)
+add_executable(callInChainFoldLeftFunction callInChainFoldLeftFunction.cpp)
+add_executable(callInChainFoldRightFunction callInChainFoldRightFunction.cpp)
